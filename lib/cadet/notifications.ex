@@ -38,6 +38,10 @@ defmodule Cadet.Notifications do
   """
   def get_notification_type!(id), do: Repo.get!(NotificationType, id)
 
+  def get_notification_type_by_name!(name) do
+    Repo.one!(from(nt in NotificationType, where: nt.name == ^name))
+  end
+
   @doc """
   Creates a notification_type.
 
