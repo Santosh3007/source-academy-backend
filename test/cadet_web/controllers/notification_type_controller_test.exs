@@ -32,7 +32,9 @@ defmodule CadetWeb.NotificationTypeControllerTest do
 
   # describe "create notification_type" do
   #   test "renders notification_type when data is valid", %{conn: conn} do
-  #     conn = post(conn, Routes.notification_type_path(conn, :create), notification_type: @create_attrs)
+  #     conn =
+  #       post(conn, Routes.notification_type_path(conn, :create), notification_type: @create_attrs)
+
   #     assert %{"id" => id} = json_response(conn, 201)["data"]
 
   #     conn = get(conn, Routes.notification_type_path(conn, :show, id))
@@ -47,7 +49,9 @@ defmodule CadetWeb.NotificationTypeControllerTest do
   #   end
 
   #   test "renders errors when data is invalid", %{conn: conn} do
-  #     conn = post(conn, Routes.notification_type_path(conn, :create), notification_type: @invalid_attrs)
+  #     conn =
+  #       post(conn, Routes.notification_type_path(conn, :create), notification_type: @invalid_attrs)
+
   #     assert json_response(conn, 422)["errors"] != %{}
   #   end
   # end
@@ -55,8 +59,15 @@ defmodule CadetWeb.NotificationTypeControllerTest do
   # describe "update notification_type" do
   #   setup [:create_notification_type]
 
-  #   test "renders notification_type when data is valid", %{conn: conn, notification_type: %NotificationType{id: id} = notification_type} do
-  #     conn = put(conn, Routes.notification_type_path(conn, :update, notification_type), notification_type: @update_attrs)
+  #   test "renders notification_type when data is valid", %{
+  #     conn: conn,
+  #     notification_type: %NotificationType{id: id} = notification_type
+  #   } do
+  #     conn =
+  #       put(conn, Routes.notification_type_path(conn, :update, notification_type),
+  #         notification_type: @update_attrs
+  #       )
+
   #     assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
   #     conn = get(conn, Routes.notification_type_path(conn, :show, id))
@@ -70,8 +81,15 @@ defmodule CadetWeb.NotificationTypeControllerTest do
   #            } = json_response(conn, 200)["data"]
   #   end
 
-  #   test "renders errors when data is invalid", %{conn: conn, notification_type: notification_type} do
-  #     conn = put(conn, Routes.notification_type_path(conn, :update, notification_type), notification_type: @invalid_attrs)
+  #   test "renders errors when data is invalid", %{
+  #     conn: conn,
+  #     notification_type: notification_type
+  #   } do
+  #     conn =
+  #       put(conn, Routes.notification_type_path(conn, :update, notification_type),
+  #         notification_type: @invalid_attrs
+  #       )
+
   #     assert json_response(conn, 422)["errors"] != %{}
   #   end
   # end
@@ -83,9 +101,9 @@ defmodule CadetWeb.NotificationTypeControllerTest do
   #     conn = delete(conn, Routes.notification_type_path(conn, :delete, notification_type))
   #     assert response(conn, 204)
 
-  #     assert_error_sent 404, fn ->
+  #     assert_error_sent(404, fn ->
   #       get(conn, Routes.notification_type_path(conn, :show, notification_type))
-  #     end
+  #     end)
   #   end
   # end
 

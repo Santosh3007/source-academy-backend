@@ -1,13 +1,14 @@
 defmodule Cadet.Workers.NotificationWorker do
   use Oban.Worker, queue: :notifications, max_attempts: 1
   alias Cadet.Email
+  alias Cadet.Notifications
 
   defp is_system_enabled(notification_type_id) do
-    Cadet.Notifications.get_notification_type!(notification_type_id).is_enabled
+    Notifications.get_notification_type!(notification_type_id).is_enabled
   end
 
   defp is_course_enabled(notification_type_id, course_id, assessment_config_id) do
-    Cadet.Notifications.get_notification_config!(
+    Notifications.get_notification_config!(
       notification_type_id,
       course_id,
       assessment_config_id
@@ -15,11 +16,12 @@ defmodule Cadet.Workers.NotificationWorker do
   end
 
   def is_user_enabled(notification_type_id, course_reg_id) do
-    pref = Cadet.Notifications.get_notification_preference(notification_type_id, course_reg_id)
+    pref = Notifications.get_notification_preference(notification_type_id, course_reg_id)
 
-    cond do
-      is_nil(pref) -> true
-      true -> pref.is_enabled
+    if is_nil(pref) do
+      true
+    else
+      pref.is_enabled
     end
   end
 
@@ -31,17 +33,15 @@ defmodule Cadet.Workers.NotificationWorker do
         course_reg_id,
         time_option_minutes
       ) do
-    pref = Cadet.Notifications.get_notification_preference(notification_type_id, course_reg_id)
+    pref = Notifications.get_notification_preference(notification_type_id, course_reg_id)
 
-    cond do
-      is_nil(pref) ->
-        Cadet.Notifications.get_default_time_option_for_assessment!(
-          assessment_config_id,
-          notification_type_id
-        ).minutes == time_option_minutes
-
-      true ->
-        pref.time_option.minutes == time_option_minutes
+    if is_nil(pref) do
+      Notifications.get_default_time_option_for_assessment!(
+        assessment_config_id,
+        notification_type_id
+      ).minutes == time_option_minutes
+    else
+      pref.time_option.minutes == time_option_minutes
     end
   end
 
@@ -53,7 +53,7 @@ defmodule Cadet.Workers.NotificationWorker do
     notification_type_id = 2
     ungraded_threshold = 5
 
-    ntype = Cadet.Notifications.get_notification_type!(notification_type_id)
+    ntype = Notifications.get_notification_type!(notification_type_id)
 
     for course_id <- Cadet.Courses.get_all_course_ids() do
       avengers_crs = Cadet.Accounts.CourseRegistrations.get_staffs(course_id)
@@ -92,8 +92,7 @@ defmodule Cadet.Workers.NotificationWorker do
           %{"notification_type" => notification_type, "submission_id" => submission_id} = _args
       })
       when notification_type == "assessment_submission" do
-    notification_type =
-      Cadet.Notifications.get_notification_type_by_name!("ASSESSMENT SUBMISSION")
+    notification_type = Notifications.get_notification_type_by_name!("ASSESSMENT SUBMISSION")
 
     submission = Cadet.Assessments.get_submission_by_id(submission_id)
     course_id = submission.assessment.course_id

@@ -82,7 +82,7 @@ defmodule Cadet.Courses do
     end
   end
 
-  def get_all_course_ids() do
+  def get_all_course_ids do
     Course
     |> select([c], c.id)
     |> Repo.all()
